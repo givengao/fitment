@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static java.lang.String.valueOf;
 
@@ -26,6 +27,8 @@ public class UserServiceApplicationTests {
 				-68, 45));
 
 		prettyPrint("The initial list contains: ", integerList);
+
+		List<Integer> firstFiveNega = integerList.stream().filter(negatives()).collect(Collectors.toList());
 
 		List<Integer> firstFiveNegatives = Fluent.from(integerList).sorted(Comparator.comparing(Integer::intValue)).distinct().toList();
 

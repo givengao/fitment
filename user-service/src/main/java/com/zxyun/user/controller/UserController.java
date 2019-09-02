@@ -1,20 +1,19 @@
 package com.zxyun.user.controller;
 
 import com.zxyun.user.annotation.Auth;
+import com.zxyun.user.base.BaseController;
+import com.zxyun.user.base.BaseDto;
 import com.zxyun.user.util.BResponse;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/user")
-public class UserController {
+@RestController
+@RequestMapping("user")
+public class UserController extends BaseController {
 
     @GetMapping("/ping")
     @Auth
-    public BResponse ping () {
-        return BResponse.ok("hello world");
+    public BResponse ping (@RequestBody BaseDto baseDto) {
+        return BResponse.ok(baseDto);
     }
 
     @PostMapping("/register")

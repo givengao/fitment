@@ -10,6 +10,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class AuthInterceptor extends HandlerInterceptorAdapter {
 
@@ -30,8 +31,10 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             if (auth == null) {
                 return true;
             } else {
+                HttpSession session = request.getSession();
                 Cookie[] cookies = request.getCookies();
-                log.info("开始权限校验--{}");
+
+                log.info("开始权限校验--{}",request.getHeader("Authorization"));
             }
         } else {
 
