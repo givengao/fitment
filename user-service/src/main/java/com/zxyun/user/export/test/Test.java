@@ -2,7 +2,7 @@ package com.zxyun.user.export.test;
 
 import com.zxyun.user.base.BaseDto;
 import com.zxyun.user.base.Rdto;
-import com.zxyun.user.export.util.ExcelHelper;
+import com.zxyun.user.export.factory.XSGExcelHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class Test {
 
 
 
-        ExcelHelper.Builder
+        XSGExcelHelper.Builder
                 .from(baseDtos)
                 .append("daada1", e -> e.getUserName())
                 .append("daada2", e -> e.getUserName())
@@ -73,7 +73,43 @@ public class Test {
                 .append("daada3", e -> e.getRname())
                 .append("daada4", e -> e.getRname())
                 .sheetTitle("sheet1")
-                .bookTitle("book1")
+                .and(baseControllers)
+                .append("daada1", e -> e.getRname())
+                .append("daada2", e -> e.getRname())
+                .append("daada3", e -> e.getRname())
+                .append("daada4", e -> e.getRname())
+                .append("daada1", e -> e.getRname())
+                .append("daada2", e -> e.getRname())
+                .append("daada3", e -> e.getRname())
+                .append("daada4", e -> e.getRname())
+                .append("daada1", e -> e.getRname())
+                .append("daada2", e -> e.getRname())
+                .append("daada3", e -> e.getRname())
+                .append("daada4", e -> e.getRname())
+                .append("daada1", e -> e.getRname())
+                .append("daada2", e -> e.getRname())
+                .append("daada3", e -> e.getRname())
+                .append("daada4", e -> e.getRname())
+                .sheetTitle("sheet3")
+                .and(baseControllers)
+                .append("daada1", e -> e.getRname())
+                .append("daada2", e -> e.getRname())
+                .append("daada3", e -> e.getRname())
+                .append("daada4", e -> e.getRname())
+                .append("daada1", e -> e.getRname())
+                .append("daada2", e -> e.getRname())
+                .append("daada3", e -> e.getRname())
+                .append("daada4", e -> e.getRname())
+                .append("daada1", e -> e.getRname())
+                .append("daada2", e -> e.getRname())
+                .append("daada3", e -> e.getRname())
+                .append("daada4", e -> e.getRname())
+                .append("daada1", e -> e.getRname())
+                .append("daada2", e -> e.getRname())
+                .append("daada3", e -> e.getRname())
+                .append("daada4", e -> e.getRname())
+                .sheetTitle("123")
+                .fileName("book1")
                 .build()
                 .export();
 

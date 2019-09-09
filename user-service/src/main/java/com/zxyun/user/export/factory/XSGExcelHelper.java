@@ -1,56 +1,56 @@
-package com.zxyun.user.export.util;
+package com.zxyun.user.export.factory;
 
 import com.zxyun.user.export.XSGCell;
 import com.zxyun.user.export.XSGSheet;
 import com.zxyun.user.export.XSGWorkBook;
+import com.zxyun.user.export.util.ExcelUtil;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @des: Excel导出
  * @Author: given
  * @Date 2019/9/6 18:33
  */
-public class ExcelHelper {
+public class XSGExcelHelper {
 
     private XSGWorkBook xsgWorkBook;
 
-    public ExcelHelper(XSGWorkBook xsgWorkBook) {
+    public XSGExcelHelper(XSGWorkBook xsgWorkBook) {
         this.xsgWorkBook = xsgWorkBook;
     }
 
-    public interface XsgWorkBookConfig {
-        ExcelHelper build ();
+    public void export (){
+        try {
+            ExcelUtil.export(xsgWorkBook);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Builder.bookThreadLocal.remove();
     }
 
-    //todo 导出
-    public <T> void export () {
-        System.out.println("book title:" + xsgWorkBook.getTitle());
-
-        for (XSGSheet xsgSheet : xsgWorkBook.getXsgSheets()) {
-            System.out.println("\n");
-            System.out.println("sheet title:" + xsgSheet.getTitle());
-
-            System.out.println(xsgSheet.getXsgCells().stream().filter(e -> e != null).map(e -> ((XSGCell)e).getHeaderName()).collect(Collectors.joining("|")) + "\n");
-
-            for (Object obj : xsgSheet.getData()) {
-                System.out.println("\n");
-                for (Object objr : xsgSheet.getXsgCells()) {
-                    XSGCell xsgCell = (XSGCell)objr;
-                    System.out.print(xsgCell.getBodyFunction().apply(obj) + "|");
-                }
-            }
+    public void export (HttpServletResponse response){
+        try {
+            ExcelUtil.export(response, xsgWorkBook);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        Builder.bookThreadLocal.remove();
+    }
+
+    public interface XsgWorkBookConfig {
+        XSGExcelHelper build ();
     }
 
     public interface XsgSheetConfig {
 
         <T> XsgCellConfig<T> and (List<? super T> data);
 
-        XsgWorkBookConfig bookTitle (String bookName);
+        XsgWorkBookConfig fileName(String bookName);
     }
 
     public interface XsgCellConfig<T> {
@@ -63,11 +63,14 @@ public class ExcelHelper {
 
     public static class Builder implements XsgWorkBookConfig, XsgSheetConfig {
 
-        private static XSGWorkBook xsgWorkBook;
+        //多线程问题
+        private static ThreadLocal<XSGWorkBook> bookThreadLocal = new ThreadLocal<>();
 
         public Builder(XSGSheet xsgSheet) {
+            XSGWorkBook xsgWorkBook = bookThreadLocal.get();
             if (xsgWorkBook == null) {
                 xsgWorkBook = new XSGWorkBook();
+                bookThreadLocal.set(xsgWorkBook);
             }
             xsgWorkBook.addXsgSheet(xsgSheet);
         }
@@ -83,14 +86,14 @@ public class ExcelHelper {
         }
 
         @Override
-        public XsgWorkBookConfig bookTitle(String bookName) {
-            xsgWorkBook.setTitle(bookName);
+        public XsgWorkBookConfig fileName(String bookName) {
+            bookThreadLocal.get().setFileName(bookName);
             return this;
         }
 
         @Override
-        public ExcelHelper build () {
-            return new ExcelHelper(xsgWorkBook);
+        public XSGExcelHelper build () {
+            return new XSGExcelHelper(bookThreadLocal.get());
         }
     }
 

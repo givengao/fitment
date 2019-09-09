@@ -9,16 +9,16 @@ import java.util.List;
  * @Date 2019/9/6 18:29
  */
 public class XSGWorkBook {
-    private String title;
+    private String fileName;
 
     private List<XSGSheet> xsgSheets = new ArrayList<>();
 
-    public String getTitle() {
-        return title;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public List<XSGSheet> getXsgSheets() {
