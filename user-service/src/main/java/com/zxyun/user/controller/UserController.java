@@ -64,8 +64,7 @@ public class UserController extends BaseController {
 
 
 
-        XSGExcelHelper.Builder
-                .from(baseDtos)
+        XSGExcelHelper.Builder.from(baseDtos)
                 .append("国家", e -> e.getUserName())
                 .append("地区", e -> e.getUserName())
                 .append("性别", e -> e.getCompanyId().toString())
