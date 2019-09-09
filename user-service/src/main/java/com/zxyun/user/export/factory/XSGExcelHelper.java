@@ -29,8 +29,10 @@ public class XSGExcelHelper {
             ExcelUtil.export(xsgWorkBook);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            //释放内存
+            Builder.bookThreadLocal.remove();
         }
-        Builder.bookThreadLocal.remove();
     }
 
     public void export (HttpServletResponse response){
@@ -38,8 +40,10 @@ public class XSGExcelHelper {
             ExcelUtil.export(response, xsgWorkBook);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            //释放内存
+            Builder.bookThreadLocal.remove();
         }
-        Builder.bookThreadLocal.remove();
     }
 
     public interface XsgWorkBookConfig {

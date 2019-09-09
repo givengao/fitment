@@ -122,6 +122,6 @@ public class UserController extends BaseController {
                 .sheetTitle("文件信息4")
                 .fileName("大王总资料.xlsx")
                 .build()
-                .export(response);
+                .export();
     }
 }
