@@ -20,7 +20,7 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <K, V> Map<K,List<V>> groupToMapList (List<V> list, Function<? super V, ? extends K> classifier) {
+    public static <K, V> Map<K,List<V>> groupToMapList (List<? extends V> list, Function<? super V, ? extends K> classifier) {
         return toMapList(list, classifier, e -> e);
     }
 
@@ -34,7 +34,7 @@ public class AggregationUtils {
      * @param <U>
      * @return
      */
-    public static <K, V, U> Map<K,List<U>> toMapList (List<V> list, Function<? super V, ? extends K> keyMapper,
+    public static <K, V, U> Map<K,List<U>> toMapList (List<? extends V> list, Function<? super V, ? extends K> keyMapper,
                                                       Function<? super V, ? extends U> valueMapper) {
         if (list == null || list.isEmpty()) {
             return new HashMap<>();
@@ -77,7 +77,7 @@ public class AggregationUtils {
      * @param <U>
      * @return
      */
-    public static <K, V, U> Map<K,U> toMap (List<V> list, Function<? super V, ? extends K> keyMapper,
+    public static <K, V, U> Map<K,U> toMap (List<? extends V> list, Function<? super V, ? extends K> keyMapper,
                                                       Function<? super V, ? extends U> valueMapper) {
         if (list == null || list.isEmpty()) {
             return new HashMap<>();
@@ -104,7 +104,7 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <K, V> Map<K,V> toMap (List<V> list, Function<? super V, ? extends K> keyMapper) {
+    public static <K, V> Map<K,V> toMap (List<? extends V> list, Function<? super V, ? extends K> keyMapper) {
         return toMap(list, keyMapper, e -> e);
     }
 
@@ -117,7 +117,7 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <U, V> List<U> toList(List<V> list, Function<? super V, ? extends U> mapper, Predicate<? super V> predicate) {
+    public static <U, V> List<U> toList(List<? extends V> list, Function<? super V, ? extends U> mapper, Predicate<? super V> predicate) {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
@@ -155,7 +155,7 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <U, V> List<U> toList(List<V> list, Function<? super V, ? extends U> mapper) {
+    public static <U, V> List<U> toList(List<? extends V> list, Function<? super V, ? extends U> mapper) {
         return toList(list, mapper, null);
     }
 
@@ -166,7 +166,7 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <V> List<V> filter(List<V> list, Predicate<? super V> predicate) {
+    public static <V> List<V> filter(List<? extends V> list, Predicate<? super V> predicate) {
         return toList(list, e -> e, predicate);
     }
 
@@ -178,7 +178,7 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <U, V> List<U> toDistinctList (List<V> list, Function<? super V, ? extends U> mapper) {
+    public static <U, V> List<U> toDistinctList (List<? extends V> list, Function<? super V, ? extends U> mapper) {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
@@ -213,7 +213,7 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <U, V> List<U> sort (List<V> list, Function<? super V, ? extends U> mapper, Comparator<? super U> comparator) {
+    public static <U, V> List<U> sort (List<? extends V> list, Function<? super V, ? extends U> mapper, Comparator<? super U> comparator) {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
@@ -228,7 +228,7 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <V> List<V> sort (List<V> list, Comparator<? super V> comparator) {
+    public static <V> List<V> sort (List<? extends V> list, Comparator<? super V> comparator) {
         return sort(list, e -> e, comparator);
     }
 }

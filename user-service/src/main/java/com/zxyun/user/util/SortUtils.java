@@ -20,7 +20,7 @@ public class SortUtils {
      * @param <V>
      * @return
      */
-    public static <V> List<V> bubbleSort (List<V> list, Comparator<? super V> comparator) {
+    public static <V> List<V> bubbleSort (List<? extends V> list, Comparator<? super V> comparator) {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
@@ -49,7 +49,7 @@ public class SortUtils {
      * @param <V>
      * @return
      */
-    public static <V> List<V> selectSort (List<V> list, Comparator<? super V> comparator) {
+    public static <V> List<V> selectSort (List<? extends V> list, Comparator<? super V> comparator) {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
@@ -83,7 +83,7 @@ public class SortUtils {
      * @param <V>
      * @return
      */
-    public static <V> List<V> insertSort (List<V> list, Comparator<? super V> comparator) {
+    public static <V> List<V> insertSort (List<? extends V> list, Comparator<? super V> comparator) {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
@@ -115,7 +115,7 @@ public class SortUtils {
      * @param <V>
      * @return
      */
-    public static <V> List<V> streamSort (List<V> list, Comparator<? super V> comparator) {
+    public static <V> List<V> streamSort (List<? extends V> list, Comparator<? super V> comparator) {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }

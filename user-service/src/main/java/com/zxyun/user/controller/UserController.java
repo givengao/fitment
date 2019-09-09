@@ -63,7 +63,6 @@ public class UserController extends BaseController {
         rdtos.add(rdto1);
 
 
-
         XSGExcelHelper.Builder.from(baseDtos)
                 .append("国家", e -> e.getUserName())
                 .append("地区", e -> e.getUserName())
@@ -123,5 +122,8 @@ public class UserController extends BaseController {
                 .fileName("大王总资料.xlsx")
                 .build()
                 .export();
+
+        List<? extends Integer> integers = new ArrayList<>();
+        Integer a = integers.get(0);
     }
 }

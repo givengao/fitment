@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -20,7 +21,10 @@ public class XSGExcelHelper {
 
     private XSGWorkBook xsgWorkBook;
 
-    public XSGExcelHelper(XSGWorkBook xsgWorkBook) {
+    private XSGExcelHelper (){
+    }
+
+    private XSGExcelHelper(XSGWorkBook xsgWorkBook) {
         this.xsgWorkBook = xsgWorkBook;
     }
 
@@ -46,6 +50,21 @@ public class XSGExcelHelper {
         }
     }
 
+    /**
+     * 自定义实现
+     * @param consumer
+     */
+    public void export (Consumer<XSGWorkBook> consumer){
+        try {
+            consumer.accept(xsgWorkBook);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //释放内存
+            Builder.bookThreadLocal.remove();
+        }
+    }
+
     public interface XsgWorkBookConfig {
         XSGExcelHelper build ();
     }
@@ -54,7 +73,7 @@ public class XSGExcelHelper {
 
         <T> XsgCellConfig<T> and (List<? super T> data);
 
-        XsgWorkBookConfig fileName(String bookName);
+        XsgWorkBookConfig fileName(String fileName);
     }
 
     public interface XsgCellConfig<T> {
