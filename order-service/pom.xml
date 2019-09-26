@@ -7,10 +7,9 @@
 		<artifactId>fitment</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>com.zxyun.user</groupId>
-	<artifactId>user-service</artifactId>
+	<groupId>com.zxyun.order</groupId>
+	<artifactId>order-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>user-service</name>
-	<description>用户基础服务</description>
+	<description>订单</description>
 
 </project>
