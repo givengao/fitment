@@ -120,8 +120,7 @@ public class UserController extends BaseController {
                 .append("大王", e -> e.getRname().toString())
                 .sheetTitle("文件信息4")
                 .fileName("大王总资料.xlsx")
-                .build()
-                .export();
+                .build().export();
 
         List<? extends Integer> integers = new ArrayList<>();
         Integer a = integers.get(0);
