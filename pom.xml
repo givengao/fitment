@@ -15,7 +15,6 @@
 	<modules>
 		<module>user-service</module>
 		<module>order-service</module>
-		<module>pay-service</module>
 	</modules>
 
 	<properties>

@@ -8,6 +8,11 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.8.1</version>
 		</dependency>
+		<dependency>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-core</artifactId>
+			<version>1.5.2</version>
+		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>com.zxyun.fitment</groupId>
