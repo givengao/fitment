@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -21,7 +22,8 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <K, V> Map<K,List<V>> groupToMapList (List<? extends V> list, Function<? super V, ? extends K> classifier) {
+    public static <K, V> Map<K,List<V>> groupToMapList (List<? extends V> list,
+                                                        Function<? super V, ? extends K> classifier) {
         return toMapList(list, classifier, e -> e);
     }
 
@@ -35,7 +37,8 @@ public class AggregationUtils {
      * @param <U>
      * @return
      */
-    public static <K, V, U> Map<K,List<U>> toMapList (List<? extends V> list, Function<? super V, ? extends K> keyMapper,
+    public static <K, V, U> Map<K,List<U>> toMapList (List<? extends V> list,
+                                                      Function<? super V, ? extends K> keyMapper,
                                                       Function<? super V, ? extends U> valueMapper) {
         if (list == null || list.isEmpty()) {
             return new HashMap<>();
@@ -78,8 +81,9 @@ public class AggregationUtils {
      * @param <U>
      * @return
      */
-    public static <K, V, U> Map<K,U> toMap (List<? extends V> list, Function<? super V, ? extends K> keyMapper,
-                                                      Function<? super V, ? extends U> valueMapper) {
+    public static <K, V, U> Map<K,U> toMap (List<? extends V> list,
+                                            Function<? super V, ? extends K> keyMapper,
+                                            Function<? super V, ? extends U> valueMapper) {
         if (list == null || list.isEmpty()) {
             return new HashMap<>();
         }
@@ -105,7 +109,8 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <K, V> Map<K,V> toMap (List<? extends V> list, Function<? super V, ? extends K> keyMapper) {
+    public static <K, V> Map<K,V> toMap (List<? extends V> list,
+                                         Function<? super V, ? extends K> keyMapper) {
         return toMap(list, keyMapper, e -> e);
     }
 
@@ -118,7 +123,9 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <U, V> List<U> toList(List<? extends V> list, Function<? super V, ? extends U> mapper, Predicate<? super V> predicate) {
+    public static <U, V> List<U> toList(List<? extends V> list,
+                                        Function<? super V, ? extends U> mapper,
+                                        Predicate<? super V> predicate) {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
@@ -156,7 +163,8 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <U, V> List<U> toList(List<? extends V> list, Function<? super V, ? extends U> mapper) {
+    public static <U, V> List<U> toList(List<? extends V> list,
+                                        Function<? super V, ? extends U> mapper) {
         return toList(list, mapper, null);
     }
 
@@ -167,7 +175,8 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <V> List<V> filter(List<? extends V> list, Predicate<? super V> predicate) {
+    public static <V> List<V> filter(List<? extends V> list,
+                                     Predicate<? super V> predicate) {
         return toList(list, e -> e, predicate);
     }
 
@@ -179,7 +188,8 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <U, V> List<U> toDistinctList (List<? extends V> list, Function<? super V, ? extends U> mapper) {
+    public static <U, V> List<U> toDistinctList (List<? extends V> list,
+                                                 Function<? super V, ? extends U> mapper) {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
@@ -214,7 +224,9 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <U, V> List<U> sort (List<? extends V> list, Function<? super V, ? extends U> mapper, Comparator<? super U> comparator) {
+    public static <U, V> List<U> sort (List<? extends V> list,
+                                       Function<? super V, ? extends U> mapper,
+                                       Comparator<? super U> comparator) {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
@@ -229,7 +241,8 @@ public class AggregationUtils {
      * @param <V>
      * @return
      */
-    public static <V> List<V> sort (List<? extends V> list, Comparator<? super V> comparator) {
+    public static <V> List<V> sort (List<? extends V> list,
+                                    Comparator<? super V> comparator) {
         return sort(list, e -> e, comparator);
     }
 
@@ -239,15 +252,16 @@ public class AggregationUtils {
      * @param dest 目标
      * @param sKeyMapper key关联取值函数
      * @param dKeyMapper key关联取值函数
-     * @param biConsumer 最终匹配填充处理
+     * @param biConsumer 最终匹配处理
      * @param <S>
      * @param <D>
      * @param <K>
      */
     public static <S, D, K> void match (List<? extends S> source, List<? extends D> dest,
-                                        Function<? super S, ? extends K> sKeyMapper, Function<? super D, ? extends K> dKeyMapper,
+                                        Function<? super S, ? extends K> sKeyMapper,
+                                        Function<? super D, ? extends K> dKeyMapper,
                                         BiConsumer<? super S, ? super D> biConsumer) {
-        if (isEmpty(source) || isEmpty(dest)) {
+        if (isEmpty(source) || isEmpty(dest) || sKeyMapper == null || dKeyMapper == null || biConsumer == null) {
             return;
         }
         Map<K, S> ksMap = toMap(source, sKeyMapper);
@@ -260,11 +274,29 @@ public class AggregationUtils {
         }
     }
 
+    /**
+     * 不同对象间根据key关联匹配填充值
+     * @param sourceSupplier 取来源数据函数
+     * @param destSupplier 取目标数据函数
+     * @param sKeyMapper key关联取值函数
+     * @param dKeyMapper key关联取值函数
+     * @param biConsumer 最终匹配处理
+     * @param <S>
+     * @param <D>
+     * @param <K>
+     */
+    public static <S, D, K> void match (Supplier<List<? extends S>> sourceSupplier,
+                                        Supplier<List<? extends D>> destSupplier,
+                                        Function<? super S, ? extends K> sKeyMapper,
+                                        Function<? super D, ? extends K> dKeyMapper,
+                                        BiConsumer<? super S, ? super D> biConsumer) {
+        List<? extends S> source = sourceSupplier.get();
+        List<? extends D> dest = destSupplier.get();
+        match(source, dest, sKeyMapper, dKeyMapper, biConsumer);
+    }
+
 
     private static boolean isEmpty (Collection collection) {
-        if (collection == null || collection.isEmpty()) {
-            return true;
-        }
-        return false;
+        return (collection == null || collection.isEmpty());
     }
 }
