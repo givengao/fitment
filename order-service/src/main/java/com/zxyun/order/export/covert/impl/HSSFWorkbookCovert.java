@@ -59,7 +59,7 @@ public class HSSFWorkbookCovert implements Covert<XSGWorkBook, HSSFWorkbook> {
                 HSSFRow dataRow = sheet.createRow(lastRowNum + 1);
 
                 for (int i = 0; i < xsgCells.size(); i++) {
-                    XSGCell xsgCell = (XSGCell)xsgCells.get(i);
+                    XSGCell xsgCell = xsgCells.get(i);
                     dataRow.createCell(i).setCellValue((String)xsgCell.getBodyFunction().apply(obj));
                 }
             }

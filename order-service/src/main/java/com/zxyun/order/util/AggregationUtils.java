@@ -1,6 +1,7 @@
 package com.zxyun.order.util;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -230,5 +231,40 @@ public class AggregationUtils {
      */
     public static <V> List<V> sort (List<? extends V> list, Comparator<? super V> comparator) {
         return sort(list, e -> e, comparator);
+    }
+
+    /**
+     * 不同对象间根据key关联匹配填充值
+     * @param source 来源
+     * @param dest 目标
+     * @param sKeyMapper key关联取值函数
+     * @param dKeyMapper key关联取值函数
+     * @param biConsumer 最终匹配填充处理
+     * @param <S>
+     * @param <D>
+     * @param <K>
+     */
+    public static <S, D, K> void match (List<? extends S> source, List<? extends D> dest,
+                                        Function<? super S, ? extends K> sKeyMapper, Function<? super D, ? extends K> dKeyMapper,
+                                        BiConsumer<? super S, ? super D> biConsumer) {
+        if (isEmpty(source) || isEmpty(dest)) {
+            return;
+        }
+        Map<K, S> ksMap = toMap(source, sKeyMapper);
+        for (D d : dest) {
+            K key = dKeyMapper.apply(d);
+            S s = ksMap.get(key);
+            if (s != null) {
+                biConsumer.accept(s, d);
+            }
+        }
+    }
+
+
+    private static boolean isEmpty (Collection collection) {
+        if (collection == null || collection.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 }
