@@ -5,10 +5,13 @@ import com.zxyun.order.base.BaseController;
 import com.zxyun.order.base.BaseDto;
 import com.zxyun.order.base.Rdto;
 import com.zxyun.order.export.factory.XSGExcelHelper;
+import com.zxyun.order.export.factory.XSGImporterHelper;
 import com.zxyun.order.util.BResponse;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +37,20 @@ public class UserController extends BaseController {
 
     @PostMapping("/changePwd")
     @Auth
-    public BResponse changePwd () {
+    public BResponse changePwd (MultipartFile file) {
+        try {
+            InputStream in = file.getInputStream();
+            String fileName = file.getOriginalFilename();
+            List<BaseDto> list = new ArrayList<>();
+            List<BaseDto> list1 =
+                    XSGImporterHelper
+                            .builder().from(in).fileName(fileName).to(BaseDto.class)
+                            .append(0, (t, s) -> t.setCompanyId(Long.parseLong(s)))
+                            .append(1, (t, s) -> {})
+                            .end().build().importer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return BResponse.ok();
     }
 
@@ -61,7 +77,6 @@ public class UserController extends BaseController {
         Rdto rdto1 = new Rdto();
         rdto1.setRname("我是12");
         rdtos.add(rdto1);
-
 
         XSGExcelHelper.Builder.from(baseDtos)
                 .append("国家", e -> e.getUserName())
