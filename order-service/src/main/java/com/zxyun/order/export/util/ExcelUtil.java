@@ -170,9 +170,9 @@ public class ExcelUtil {
                         }
                     }
                 }
-                list.add(t);
                 ++cellCount;
             }
+            list.add(t);
         }
         return list;
     }
