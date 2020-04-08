@@ -1,10 +1,7 @@
 package com.zxyun.order.util;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 /**
@@ -295,6 +292,187 @@ public class AggregationUtils {
         match(source, dest, sKeyMapper, dKeyMapper, biConsumer);
     }
 
+    /**
+     * 按照函数规则对集合中数据做处理
+     * @param values
+     * @param consumer
+     * @param <T>
+     */
+    public static <T> void consumer (List<? extends T> values, Consumer<? super T> consumer) {
+        if (!isEmpty(values)) {
+            for (T t : values) {
+                if (t != null) {
+                    consumer.accept(t);
+                }
+            }
+        }
+    }
+
+    /**
+     * 分类排序， 按分类排序规则按下标前后顺序进行排序
+     * @param values 排序数组
+     * @param classifyRules 分类规则（多个）
+     * @param keyMapper 排序数组中参与分类的取值函数
+     * @param <T>
+     * @param <S>
+     * @return
+     */
+    public static <T, S> List<T> sortClassify (List<T> values, List<S[]> classifyRules, Function<? super T, ? extends S> keyMapper) {
+        if (isEmpty(values)) {
+            return new ArrayList<>();
+        }
+        if (isEmpty(classifyRules)) {
+            return values;
+        }
+        return sort(values, (o1, o2) -> getRuleIndex(classifyRules, keyMapper.apply(o1)).compareTo(getRuleIndex(classifyRules, keyMapper.apply(o2))));
+    }
+
+    /**
+     * 分类排序， 按分类排序规则按下标前后顺序进行排序
+     * @param values 排序数组
+     * @param classifyRules 分类规则（多个）
+     * @param keyMapper 排序数组中参与分类的取值函数
+     * @param <T>
+     * @param <S>
+     * @return
+     */
+    public static <T, S> List<T> sortInnerClassify (List<T> values, List<S[]> classifyRules, Function<? super T, ? extends S> keyMapper) {
+        if (isEmpty(values)) {
+            return new ArrayList<>();
+        }
+        if (isEmpty(classifyRules)) {
+            return values;
+        }
+        return sort(values, (o1, o2) -> getRuleInnerIndex(classifyRules, keyMapper.apply(o1)).compareTo(getRuleInnerIndex(classifyRules, keyMapper.apply(o2))));
+    }
+
+    /**
+     * 分类排序， 按分类排序规则按下标前后顺序进行排序
+     * @param values 排序数组
+     * @param classifyRules 分类规则（多个）
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> sortClassify (List<T> values, List<T[]> classifyRules) {
+        return sortClassify(values, classifyRules, e -> e);
+    }
+
+
+    /**
+     * 分类排序， 按分类排序规则按下标前后顺序进行排序
+     * @param values 排序数组
+     * @param classifyRules 分类规则（多个）
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> sortInnerClassify (List<T> values, List<T[]> classifyRules) {
+        return sortInnerClassify(values, classifyRules, e -> e);
+    }
+
+    /**
+     * 分类排序， 按分类排序规则按下标前后顺序进行排序
+     * @param values 排序数组
+     * @param classifyRules 分类规则（单个）
+     * @param keyMapper 排序数组中参与分类的取值函数
+     * @param <T>
+     * @param <S>
+     * @return
+     */
+    public static <T, S> List<T> sortSingleClassify (List<T> values, List<S> classifyRules, Function<? super T, ? extends S> keyMapper) {
+        if (isEmpty(values)) {
+            return new ArrayList<>();
+        }
+        if (isEmpty(classifyRules)) {
+            return values;
+        }
+        return sort(values, (o1, o2) -> getSingleRuleIndex(classifyRules, keyMapper.apply(o1)).compareTo(getSingleRuleIndex(classifyRules, keyMapper.apply(o2))));
+    }
+
+    /**
+     * 分类排序， 按分类排序规则按下标前后顺序进行排序
+     * @param values 排序数组
+     * @param classifyRules 分类规则（单个）
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> sortSingleClassify (List<T> values, List<T> classifyRules) {
+        if (isEmpty(values)) {
+            return new ArrayList<>();
+        }
+        if (isEmpty(classifyRules)) {
+            return values;
+        }
+        return sortSingleClassify(values, classifyRules, e -> e);
+    }
+
+
+
+    /**
+     * 取目标值所在分类下标的位置
+     * @param classifyRules
+     * @param s 排序数组中参与分类的值
+     * @param <S>
+     * @return
+     */
+    private static <S> Integer getRuleIndex (List<S[]> classifyRules, S s) {
+        if (s == null) {
+            return Integer.MAX_VALUE;
+        }
+        for (int index = 0; index < classifyRules.size(); index++) {
+            S[] classifyRule = classifyRules.get(index);
+            if (classifyRule == null || classifyRule.length <= 0) {
+                continue;
+            }
+            for (int i = 0; i < classifyRule.length; i++) {
+                if (classifyRule[i] == null) {
+                    continue;
+                }
+                if (classifyRule[i].equals(s)) {
+                    return index;
+                }
+            }
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    private static <S> Integer getSingleRuleIndex (List<S> classifyRules, S s) {
+        if (s == null) {
+            return Integer.MAX_VALUE;
+        }
+        for (int index = 0; index < classifyRules.size(); index++) {
+            S classifyRule = classifyRules.get(index);
+            if (classifyRule == null) {
+                continue;
+            }
+            if (classifyRule.equals(s)) {
+                return index;
+            }
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    private static <S> Integer getRuleInnerIndex (List<S[]> classifyRules, S s) {
+        if (s == null) {
+            return Integer.MAX_VALUE;
+        }
+        int ruleIndex = 0;
+        for (int index = 0; index < classifyRules.size(); index++) {
+            S[] classifyRule = classifyRules.get(index);
+            if (classifyRule == null || classifyRule.length <= 0) {
+                continue;
+            }
+            for (int i = 0; i < classifyRule.length; i++) {
+                if (classifyRule[i] == null) {
+                    continue;
+                }
+                if (classifyRule[i].equals(s)) {
+                    return ruleIndex;
+                }
+                ruleIndex++;
+            }
+        }
+        return Integer.MAX_VALUE;
+    }
 
     private static boolean isEmpty (Collection collection) {
         return (collection == null || collection.isEmpty());

@@ -163,7 +163,7 @@ public class Test {
             List<BaseDto> list = new ArrayList<>();
             List<BaseDto> list1 = XSGImporterHelper
                     .builder().from(in).fileName(fileName).to(BaseDto.class)
-                    .append(0, (t, s) -> t.setCompanyId(((Long)s)))
+                    .append(0, (t, s) -> t.setCompanyId((Long.parseLong(s))))
                     .append(1, (t, s) -> {})
                     .end().build().importer();
         } catch (Exception e) {

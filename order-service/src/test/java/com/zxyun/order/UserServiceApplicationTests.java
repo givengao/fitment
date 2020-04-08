@@ -1,6 +1,7 @@
 package com.zxyun.order;
 
 import com.zxyun.order.fluent.Fluent;
+import com.zxyun.order.util.AggregationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,13 +21,27 @@ public class UserServiceApplicationTests {
 
 	}
 
+	private static List<Integer[]> productSortRules = new ArrayList<Integer[]>(){
+		{
+			add(new Integer[]{1,1, 14, -22, 18, -87, -61});
+			add(new Integer[]{6, 64, -82, 26, -98, 97, 45, 23, 2});
+		}
+	};
+
+	private static List<Integer> singleList = Arrays.asList(1,1, -61, 14, -22, 18, -87, 6, 64, -82, 26, -98, 97, 45, 23, 2,
+			-68, 45);
+
 
 	public static void main (String[] args) {
 		List<Integer> integerList = new ArrayList<>();
 		integerList.addAll(Arrays.asList(1,1, -61, 14, -22, 18, -87, 6, 64, -82, 26, -98, 97, 45, 23, 2,
 				-68, 45));
 
-		prettyPrint("The initial list contains: ", integerList);
+		prettyPrint("The initial list contains1: ", AggregationUtils.sortClassify(integerList, productSortRules));
+
+		prettyPrint("The initial list contains1: ", AggregationUtils.sortInnerClassify(integerList, productSortRules));
+
+		prettyPrint("The initial list contains3: ", AggregationUtils.sortSingleClassify(integerList, singleList));
 
 		List<Integer> firstFiveNega = integerList.stream().filter(negatives()).collect(Collectors.toList());
 
