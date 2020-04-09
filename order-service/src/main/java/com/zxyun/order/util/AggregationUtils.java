@@ -435,6 +435,13 @@ public class AggregationUtils {
         return Integer.MAX_VALUE;
     }
 
+    /**
+     * 取目标值所在分类下标的位置
+     * @param classifyRules
+     * @param s 排序数组中参与分类的值
+     * @param <S>
+     * @return
+     */
     private static <S> Integer getSingleRuleIndex (List<S> classifyRules, S s) {
         if (s == null) {
             return Integer.MAX_VALUE;
@@ -451,6 +458,13 @@ public class AggregationUtils {
         return Integer.MAX_VALUE;
     }
 
+    /**
+     * 取目标值所在分类下标的位置
+     * @param classifyRules
+     * @param s 排序数组中参与分类的值
+     * @param <S>
+     * @return
+     */
     private static <S> Integer getRuleInnerIndex (List<S[]> classifyRules, S s) {
         if (s == null) {
             return Integer.MAX_VALUE;
