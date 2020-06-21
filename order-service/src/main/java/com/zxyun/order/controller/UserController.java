@@ -136,8 +136,5 @@ public class UserController extends BaseController {
                 .sheetTitle("文件信息4")
                 .fileName("大王总资料.xlsx")
                 .build().export();
-
-        List<? extends Integer> integers = new ArrayList<>();
-        Integer a = integers.get(0);
     }
 }
